@@ -32,7 +32,7 @@ Ensure you have [Docker](https://www.docker.com/) and Docker Compose installed.
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/pugazh342/WolfGuard-360.git](https://github.com/yourusername/WolfGuard-360.git)
+   git clone https://github.com/pugazh342/WolfGuard-360.git
    cd WolfGuard-360
    ```
 2. Launch the entire platform:
@@ -58,4 +58,5 @@ Engage the WAF: Run the Go WAF container, passing your API Key and Target URL as
 Monitor the Perimeter: Fire an attack (e.g., `http://localhost:8080/?q=<script>`) and watch it get intercepted by the WAF and instantly logged on your Threat Feed.
 
 ## 📸 Interface Preview
+
 * Built as a comprehensive demonstration of Full-Stack Security Engineering, DevSecOps, and Microservice Architecture.
