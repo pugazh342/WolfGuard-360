@@ -48,6 +48,92 @@ Username: `admin``
 
 Password: `wolfguard2026`
 
+## Workflow
+This sequence diagram shows the step-by-step lifecycle of what happens when a hacker tries to attack a protected application, and how your platform handles it in real-time.
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Hacker as 🥷 Attacker
+    participant WAF as 🛡️ Go Edge WAF
+    participant Target as 📦 Target App
+    participant Cloud as 🧠 Python SECaaS Cloud
+    participant DB as 🗄️ PostgreSQL Vault
+    participant React as 💻 React Dashboard
+    participant Discord as 💬 Discord (Webhook)
+
+    Hacker->>WAF: POST /login?user=<script>alert()</script>
+    activate WAF
+    WAF->>WAF: Payload Inspection (Regex Engine)
+    WAF-->>Hacker: 403 Forbidden (Attack Blocked)
+    
+    Note over WAF,Cloud: WAF transmits telemetry to the cloud
+    WAF->>Cloud: POST /waf/logs [Headers: X-API-Key=wg_xyz...]
+    deactivate WAF
+    
+    activate Cloud
+    Cloud->>DB: Validate WG_API_KEY
+    DB-->>Cloud: Key Valid (Belongs to User #1)
+    Cloud->>DB: Insert Threat Log (Attacker IP, Payload)
+    DB-->>Cloud: Log Saved
+    
+    par Async Alerting
+        Cloud->>Discord: POST Webhook (Threat Alert)
+    end
+    Cloud-->>WAF: 201 Created (Log Acknowledged)
+    deactivate Cloud
+
+    Note over Cloud,React: Dashboard auto-refreshes every 5s
+    React->>Cloud: GET /waf/logs (Polling)
+    Cloud-->>React: Return JSON (New Attack Data)
+    React->>React: Update Live Threat Feed UI
+```
+ ## Architecture Diagram 
+ ``` mermaid
+graph TD
+    %% Define Styling
+    classDef frontend fill:#20232A,stroke:#61DAFB,stroke-width:2px,color:#fff;
+    classDef backend fill:#3776AB,stroke:#FFD43B,stroke-width:2px,color:#fff;
+    classDef database fill:#316192,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef waf fill:#00ADD8,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef external fill:#2C2F33,stroke:#7289DA,stroke-width:2px,color:#fff;
+    classDef target fill:#198754,stroke:#fff,stroke-width:2px,color:#fff;
+
+    %% External Actors
+    Admin([👨‍💻 SOC Admin])
+    Attacker([🥷 Malicious Actor])
+    LegitUser([👤 Legitimate User])
+
+    %% Components
+    subgraph "WolfGuard 360 SECaaS Cloud"
+        UI["💻 React Command Cockpit<br/>(Port: 5173)"]:::frontend
+        API["🧠 Python FastAPI Brain<br/>(Port: 8000)"]:::backend
+        DB[("🗄️ PostgreSQL Vault<br/>(Port: 5432)")]:::database
+    end
+
+    subgraph "Customer Environment"
+        WAF{"🛡️ Go Edge WAF<br/>(Port: 8080)"}:::waf
+        App["📦 Target Application"]:::target
+    end
+
+    %% Third Party
+    Discord["💬 Discord Webhooks"]:::external
+    GeoIP["🌍 Geo-IP Provider<br/>(ipinfo.io)"]:::external
+
+    %% Connections
+    Admin -- "JWT Auth / Dashboard" --> UI
+    UI -- "REST API (JSON)" --> API
+    API -- "SQLAlchemy ORM" --> DB
+    API -- "Async Threat Alerts" --> Discord
+    API -- "Fetch Admin Location" --> GeoIP
+    
+    Attacker -- "HTTP Exploit (XSS/SQLi)" --> WAF
+    LegitUser -- "Clean HTTP Request" --> WAF
+    
+    WAF -- "403 Forbidden / Drop" --> Attacker
+    WAF -- "Reverse Proxy" --> App
+    WAF -- "Telemetry (WG_API_KEY)" --> API
+```
+
 ## 📖 User Flow
 Register a Target: Log into the React dashboard and register the URL of the application you want to protect.
 
@@ -60,3 +146,4 @@ Monitor the Perimeter: Fire an attack (e.g., `http://localhost:8080/?q=<script>`
 ## 📸 Interface Preview
 
 * Built as a comprehensive demonstration of Full-Stack Security Engineering, DevSecOps, and Microservice Architecture.
+
