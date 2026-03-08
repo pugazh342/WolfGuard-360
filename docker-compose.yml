@@ -1,0 +1,70 @@
+services:
+  # 1. The Database (PostgreSQL Vault)
+  db:
+    image: postgres:15-alpine
+    container_name: wolfguard_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # 2. The Backend (Python Brain)
+  backend:
+    build: ./backend
+    container_name: wolfguard_backend
+    restart: always
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+
+  # 3. The Frontend (React SaaS Dashboard)
+  frontend:
+    build: ./frontend
+    container_name: wolfguard_frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules # Prevents local node_modules from overriding the container's
+    depends_on:
+      - backend
+
+  # 4. The Engine (Go Universal Agent)
+  engine:
+    build: ./engine
+    container_name: wolfguard_engine
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # --- SaaS Configuration ---
+      - WG_API_KEY=wg_65197b8cb58de6bd8da39ca8a24a47ff
+      - TARGET_URL=http://backend:8000  
+      - SAAS_URL=http://backend:8000    
+    depends_on:
+      backend:
+        condition: service_started
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

@@ -1,0 +1,58 @@
+WolfGuard-360/
+├── docker-compose.yml          # Orchestrates the whole stack (DB + API + Engine + UI)
+├── .env                        # Secrets (DB passwords, API keys) - NEVER commit this to Git
+├── .gitignore                  # Ignores venv, node_modules, .env, and binary files
+├── README.md                   # Documentation for the project
+│
+├── 📂 backend/                 # THE BRAIN (Python/FastAPI)
+│   ├── Dockerfile              # Instructions to build the Python container
+│   ├── requirements.txt        # Python dependencies (fastapi, uvicorn, sqlalchemy, psycopg2)
+│   ├── main.py                 # Entry point (starts the API server)
+│   │
+│   └── 📂 app/                 # Main application logic
+│       ├── __init__.py
+│       ├── database.py         # DB connection logic (SQLAlchemy setup)
+│       ├── models.py           # Database Table definitions (SQLAlchemy Models)
+│       ├── schemas.py          # Pydantic models (Data validation for API requests)
+│       ├── 📂 routers/         # API Endpoints (separated by feature)
+│       │   ├── auth.py         # Login/User management
+│       │   ├── scans.py        # Endpoints to trigger scans
+│       │   └── assets.py       # Endpoints to view found subdomains/ports
+│       └── 📂 core/            # Config & Utils
+│           ├── config.py       # Loads environment variables
+│           └── security.py     # Password hashing / JWT token logic
+│
+├── 📂 engine/                  # THE MUSCLE (Go/Golang)
+│   ├── Dockerfile              # Instructions to build the Go binary
+│   ├── go.mod                  # Go dependency manager
+│   ├── go.sum                  # Go checksums
+│   │
+│   ├── 📂 cmd/                 # Entry points for the Go tools
+│   │   ├── scanner/            # The Asset Discovery Tool
+│   │   │   └── main.go         # Runs the port scanner/subdomain finder
+│   │   └── waf/                # The Web Application Firewall
+│   │       └── main.go         # Runs the reverse proxy
+│   │
+│   └── 📂 internal/            # Private library code (logic shared between tools)
+│       ├── network/            # Low-level socket/HTTP code
+│       ├── reporting/          # Logic to send results back to Python API or DB
+│       └── signatures/         # WAF attack patterns (SQLi, XSS regex)
+│
+├── 📂 frontend/                # THE FACE (React + Vite)
+│   ├── Dockerfile              # Instructions to serve the UI (Nginx or Node)
+│   ├── package.json            # JS dependencies
+│   ├── vite.config.js          # Build configuration
+│   ├── index.html              # Main entry HTML
+│   │
+│   └── 📂 src/
+│       ├── App.jsx             # Main App component
+│       ├── main.jsx            # Mounts the React app
+│       ├── 📂 components/      # Reusable UI parts (Buttons, Tables, Navbar)
+│       │   ├── Dashboard.jsx
+│       │   ├── Sidebar.jsx
+│       │   └── ScanGraph.jsx   # Visualisation component
+│       └── 📂 api/             # Functions to call the Python Backend
+│           └── client.js       # Axios instance setup
+│
+└── 📂 database/                # DATABASE SETUP
+    └── init.sql                # SQL script that runs on 1st startup (creates tables automatically)
