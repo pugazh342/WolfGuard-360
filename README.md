@@ -1,55 +1,130 @@
-# 🛡️ WolfGuard 360 | Security-as-a-Service (SECaaS)
+# 🛡️ WolfGuard 360 | Enterprise SECaaS & Edge WAF
 
-![Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=FastAPI&logoColor=white)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge\&logo=go\&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge\&logo=python\&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge\&logo=FastAPI\&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge\&logo=react\&logoColor=61DAFB)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge\&logo=postgresql\&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge\&logo=docker\&logoColor=white)
 
-WolfGuard 360 is a fully containerized, enterprise-grade Security-as-a-Service (SECaaS) platform. It features a high-performance Web Application Firewall (WAF) deployed at the edge, managed by a centralized cloud control plane, and monitored via a real-time Security Operations Center (SOC) dashboard.
+---
 
-## 🏗️ Architecture
+## 🚀 Overview
 
-The platform is built on a modern microservices architecture, entirely orchestrated via Docker:
+**WolfGuard 360** is a fully containerized, enterprise-grade **Security-as-a-Service (SECaaS)** platform engineered for modern DevSecOps environments. It combines a high-performance **Edge Web Application Firewall (WAF)** with a centralized cloud control plane and a real-time SOC dashboard.
 
-1. **The Edge Engine (Go):** A lightning-fast reverse proxy WAF that intercepts HTTP traffic, inspects payloads for malicious signatures (XSS, SQLi), blocks threats, and routes safe traffic to the target application.
-2. **The SECaaS Cloud (Python/FastAPI):** The central brain of the operation. It manages multi-tenant JWT authentication, generates cryptographically secure API keys, and processes incoming threat telemetry.
-3. **The Relational Vault (PostgreSQL):** A strictly structured database keeping customer configurations, active target URLs, and attack logs completely isolated.
-4. **The Command Cockpit (React/Vite/Tailwind):** A sleek, dark-mode dashboard for users to register targets, copy deployment keys, and watch live threat intelligence feeds.
+The system is designed for **low-latency threat mitigation**, **multi-tenant scalability**, and **real-time security observability**.
 
-## ✨ Key Features
+---
 
-* **Real-Time Threat Intelligence:** As the Go Agent blocks attacks at the edge, logs are instantly pushed to the React dashboard via the Python API without requiring a page refresh.
-* **Instant API Key Kill Switches:** Users can permanently revoke compromised WAF API keys directly from their inventory, instantly locking out unauthorized agents.
-* **Live Discord Alerting:** Critical threat interceptions can be optionally routed to Discord webhooks for instant DevOps notification.
-* **God Mode Oversight:** A hidden administrative dashboard featuring real-time Geo-IP tracking (via IP fallback algorithms) to monitor the global location of active SECaaS customers.
-* **1-Click Deployment:** The entire company infrastructure boots simultaneously using Docker Compose.
+## 🏗️ Core Architecture
 
-## 🚀 Quickstart (1-Click Deploy)
+WolfGuard 360 follows a **microservices-based architecture**, orchestrated via Docker for seamless scalability and deployment.
 
-Ensure you have [Docker](https://www.docker.com/) and Docker Compose installed.
+### 🔹 Edge Engine (Golang)
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/pugazh342/WolfGuard-360.git
-   cd WolfGuard-360
-   ```
-2. Launch the entire platform:
+* High-performance reverse proxy WAF
+* Real-time inspection of HTTP traffic
+* Detects and blocks:
+
+  * Cross-Site Scripting (XSS)
+  * SQL Injection (SQLi)
+  * Path Traversal
+* Ensures only sanitized traffic reaches backend services
+
+### 🔹 SECaaS Cloud (Python / FastAPI)
+
+* Central intelligence and control layer
+* Handles:
+
+  * Multi-tenant JWT authentication
+  * Secure API key generation
+  * Asynchronous telemetry ingestion
+* Acts as the orchestration brain of the platform
+
+### 🔹 Relational Vault (PostgreSQL)
+
+* Strongly structured persistence layer
+* Features:
+
+  * Tenant isolation
+  * Target configuration storage
+  * Immutable threat logs
+
+### 🔹 Command Cockpit (React + Vite + Tailwind)
+
+* Real-time SOC dashboard
+* Features:
+
+  * Live threat feed
+  * Agent management
+  * Dark-mode UI optimized for monitoring
+
+---
+
+## ✨ Enterprise Features
+
+* **Real-Time Threat Telemetry**
+
+  * Sub-second visibility of blocked attacks in the SOC dashboard
+
+* **Instant API Key Revocation**
+
+  * Immediate shutdown of compromised edge agents
+
+* **Automated DevSecOps Alerting**
+
+  * Critical events pushed to Discord webhooks
+
+* **Global Oversight ("God Mode")**
+
+  * Geo-IP tracking of active nodes using fallback strategies
+
+* **Zero-Friction Deployment**
+
+  * Entire system boots with a single Docker Compose command
+
+---
+
+## 🚀 Quickstart (Local Deployment)
+
+### Prerequisites
+
+* Docker
+* Docker Compose
+
+---
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/pugazh342/WolfGuard-360.git
+cd WolfGuard-360
+```
+
+### 2. Launch Infrastructure
+
 ```bash
 docker-compose up --build -d
 ```
-Access the SOC Dashboard:
-Navigate to `http://localhost:5173` in your browser.
 
-Default Admin Credentials:
+### 3. Access Dashboard
 
-Username: `admin``
+```
+http://localhost:5173
+```
 
-Password: `wolfguard2026`
+### 🔐 Default Admin Credentials
 
-## Workflow
-This sequence diagram shows the step-by-step lifecycle of what happens when a hacker tries to attack a protected application, and how your platform handles it in real-time.
+```
+Username: admin
+Password: wolfguard2026
+```
+
+---
+
+## 🔄 Threat Lifecycle (Sequence Workflow)
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -64,86 +139,116 @@ sequenceDiagram
     Hacker->>WAF: POST /login?user=<script>alert()</script>
     activate WAF
     WAF->>WAF: Payload Inspection (Regex Engine)
-    WAF-->>Hacker: 403 Forbidden (Attack Blocked)
+    WAF-->>Hacker: 403 Forbidden
     
-    Note over WAF,Cloud: WAF transmits telemetry to the cloud
-    WAF->>Cloud: POST /waf/logs [Headers: X-API-Key=wg_xyz...]
+    WAF->>Cloud: POST /waf/logs (Telemetry)
     deactivate WAF
     
     activate Cloud
-    Cloud->>DB: Validate WG_API_KEY
-    DB-->>Cloud: Key Valid (Belongs to User #1)
-    Cloud->>DB: Insert Threat Log (Attacker IP, Payload)
-    DB-->>Cloud: Log Saved
+    Cloud->>DB: Validate API Key
+    DB-->>Cloud: Valid
+    Cloud->>DB: Insert Threat Log
     
     par Async Alerting
-        Cloud->>Discord: POST Webhook (Threat Alert)
+        Cloud->>Discord: Webhook Alert
     end
-    Cloud-->>WAF: 201 Created (Log Acknowledged)
+    
+    Cloud-->>React: Updated Threat Data
     deactivate Cloud
-
-    Note over Cloud,React: Dashboard auto-refreshes every 5s
-    React->>Cloud: GET /waf/logs (Polling)
-    Cloud-->>React: Return JSON (New Attack Data)
-    React->>React: Update Live Threat Feed UI
 ```
- ## Architecture Diagram 
- ``` mermaid
+
+---
+
+## 🗺️ System Topology
+
+```mermaid
 graph TD
-    %% Define Styling
-    classDef frontend fill:#20232A,stroke:#61DAFB,stroke-width:2px,color:#fff;
-    classDef backend fill:#3776AB,stroke:#FFD43B,stroke-width:2px,color:#fff;
-    classDef database fill:#316192,stroke:#fff,stroke-width:2px,color:#fff;
-    classDef waf fill:#00ADD8,stroke:#fff,stroke-width:2px,color:#fff;
-    classDef external fill:#2C2F33,stroke:#7289DA,stroke-width:2px,color:#fff;
-    classDef target fill:#198754,stroke:#fff,stroke-width:2px,color:#fff;
+    Admin([SOC Admin])
+    Attacker([Malicious Actor])
+    User([Legitimate User])
 
-    %% External Actors
-    Admin([👨‍💻 SOC Admin])
-    Attacker([🥷 Malicious Actor])
-    LegitUser([👤 Legitimate User])
-
-    %% Components
-    subgraph "WolfGuard 360 SECaaS Cloud"
-        UI["💻 React Command Cockpit<br/>(Port: 5173)"]:::frontend
-        API["🧠 Python FastAPI Brain<br/>(Port: 8000)"]:::backend
-        DB[("🗄️ PostgreSQL Vault<br/>(Port: 5432)")]:::database
+    subgraph Cloud
+        UI[React Dashboard]
+        API[FastAPI Backend]
+        DB[(PostgreSQL)]
     end
 
-    subgraph "Customer Environment"
-        WAF{"🛡️ Go Edge WAF<br/>(Port: 8080)"}:::waf
-        App["📦 Target Application"]:::target
+    subgraph Customer
+        WAF[Go Edge WAF]
+        App[Target App]
     end
 
-    %% Third Party
-    Discord["💬 Discord Webhooks"]:::external
-    GeoIP["🌍 Geo-IP Provider<br/>(ipinfo.io)"]:::external
+    Discord[Discord Webhooks]
+    GeoIP[Geo-IP Provider]
 
-    %% Connections
-    Admin -- "JWT Auth / Dashboard" --> UI
-    UI -- "REST API (JSON)" --> API
-    API -- "SQLAlchemy ORM" --> DB
-    API -- "Async Threat Alerts" --> Discord
-    API -- "Fetch Admin Location" --> GeoIP
-    
-    Attacker -- "HTTP Exploit (XSS/SQLi)" --> WAF
-    LegitUser -- "Clean HTTP Request" --> WAF
-    
-    WAF -- "403 Forbidden / Drop" --> Attacker
-    WAF -- "Reverse Proxy" --> App
-    WAF -- "Telemetry (WG_API_KEY)" --> API
+    Admin --> UI
+    UI --> API
+    API --> DB
+    API --> Discord
+    API --> GeoIP
+
+    Attacker --> WAF
+    User --> WAF
+
+    WAF --> App
+    WAF --> API
 ```
 
-## 📖 User Flow
-Register a Target: Log into the React dashboard and register the URL of the application you want to protect.
+---
 
-Deploy the Agent: Copy the generated `WG_API_KEY`.
+## 📖 Deployment Workflow
 
-Engage the WAF: Run the Go WAF container, passing your API Key and Target URL as environment variables.
+1. **Register Target**
 
-Monitor the Perimeter: Fire an attack (e.g., `http://localhost:8080/?q=<script>`) and watch it get intercepted by the WAF and instantly logged on your Threat Feed.
+   * Add your application URL in the dashboard
 
-## 📸 Interface Preview
+2. **Generate API Key**
 
-* Built as a comprehensive demonstration of Full-Stack Security Engineering, DevSecOps, and Microservice Architecture.
+   * Securely copy the issued `WG_API_KEY`
 
+3. **Deploy WAF Agent**
+
+   * Run the Golang container with:
+
+     * Target URL
+     * API Key
+
+4. **Validate Protection**
+
+   * Simulate an attack:
+
+     ```
+     http://localhost:8080/?q=<script>
+     ```
+   * Confirm:
+
+     * Request blocked
+     * Logs appear in dashboard
+
+---
+
+## 🧠 Engineering Highlights
+
+* Fully containerized microservices architecture
+* Real-time distributed telemetry pipeline
+* Secure multi-tenant SaaS design
+* Edge-first security enforcement
+* DevSecOps-ready alerting system
+
+---
+
+## 📌 Use Cases
+
+* SaaS platform protection
+* API gateway security layer
+* DevSecOps monitoring pipelines
+* Enterprise perimeter defense simulation
+* Security research & demonstration
+
+---
+
+## 🏁 Conclusion
+
+**WolfGuard 360** is engineered to demonstrate **production-grade DevSecOps practices**, combining **edge security enforcement**, **cloud intelligence**, and **real-time observability** into a cohesive, scalable platform.
+
+---
